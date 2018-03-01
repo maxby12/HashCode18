@@ -12,6 +12,7 @@ def main(inpt):
     
     rides = []
     vehicles = []
+
     
         
     
@@ -32,6 +33,7 @@ def main(inpt):
     
             
         lines = file.readlines()
+        file.close()
         id = 0
         for line in lines:
             line = line.split(" ")
@@ -39,11 +41,16 @@ def main(inpt):
             end = [int(line[2]),int(line[3])]
             earliest = int(line[4])
             latest = int(line[5])
-            #print(init,end,earliest,latest)
             rides.append(Ride(id,init,end,earliest,latest))
             id+=1
             
     readData(inpt)
+    for t in range(steps):
+        vehicles_not_ride = []
+        for veh in vehicles:
+            if veh.ride == None:
+                vehicles_not_ride.append(veh)
+        
         
 
 def play():
