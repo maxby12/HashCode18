@@ -2,6 +2,7 @@
 #from DataClasses import *
 
 time = 0
+time1 = 0
 numVehicles = 0
 rides = []
 bonus = 0
@@ -34,7 +35,7 @@ class Vehicle:
         if (self.isRiding and self.pos[0] == self.ride.endPos[0] and self.pos[1] == self.ride.endPos[1]):
             self.ride = None
             self.isRiding = False
-        if (not self.isRiding and self.pos[0] == self.ride.startPos[0] and self.pos[1] == self.ride.startPos[1]):
+        elif (not self.isRiding and self.pos[0] == self.ride.startPos[0] and self.pos[1] == self.ride.startPos[1]):
             self.isRiding = True
 
 
@@ -72,12 +73,11 @@ def getMaxScoreRide(vehicle, rides):
             scores.append( (ride.getScore(vehicle), ride.getFinishTime(vehicle), ride) )
 
     sorted(scores, key=getKey)
-    penis = (numVehicles)
     return scores[:numVehicles]
 
 def selectRide(rideOptions):
 
-    while(len(rideOptions) > 0):
+    while(len(rideOptions) > 0 and len(rideOptions[0][1]) > 0):
 
         maxScore = 0
         currentRideOption = None
@@ -92,8 +92,11 @@ def selectRide(rideOptions):
         vehicleToRide.ride = currentRideOption[1][0][2]
         vehicleToRide.listOfRides.append(vehicleToRide.ride.id)
 
-        rideOptions.delete(currentRideOption)
-        rides.delete(vehicleToRide.ride)
+        rideOptions.remove(currentRideOption)
+
+        global rides
+
+        rides = [ride for ride in rides if ride.id != vehicleToRide.ride.id]
 
         for rideOption in rideOptions:
             rideOptionList = [x for x in rideOption[1] if x[2].id != vehicleToRide.ride.id]
@@ -107,15 +110,7 @@ def main(inpt):
     rows = 0
     columns = 0
     number_rides =0
-
-
-    
-
     vehicles = []
-
-    
-        
-    
     
     def readData(inpt):
         file = open(inpt,'r')
@@ -123,10 +118,13 @@ def main(inpt):
         lines = lines.split(" ")
         rows = int(lines[0])
         columns = int(lines[1])
+        global numVehicles
         numVehicles = int(lines[2])
         number_rides = int(lines[3])
+        global bonus
         bonus = int(lines[4])
-        time = int(lines[5])
+        global time1
+        time1 = int(lines[5])
         for id in range(numVehicles):
             vehicles.append(Vehicle(id))
     
@@ -140,6 +138,7 @@ def main(inpt):
             end = [int(line[2]),int(line[3])]
             earliest = int(line[4])
             latest = int(line[5])
+            global rides
             rides.append(Ride(id,init,end,earliest,latest))
             id+=1
             
@@ -147,15 +146,19 @@ def main(inpt):
 
     rideOptions = [[vehicle,getMaxScoreRide(vehicle,rides)] for vehicle in vehicles]
     selectRide(rideOptions)
-
-    for t in range(time):
-        for vehicle in vehicles:
-            vehicle.updatePosition()
+    done = False
+    for t in range(time1):
+        if(not done):
+            for vehicle in vehicles:
+                vehicle.updatePosition()
 
         freeVehicles = [vehicle for vehicle in vehicles if vehicle.ride == None]
         rideOptions = [[vehicle,getMaxScoreRide(vehicle,rides)] for vehicle in freeVehicles]
+        if(len(rideOptions[0][1]) <= 0):
+            done = True
         selectRide(rideOptions)
-            
+        global time
+        time+=1
                 
     
     #OUTPUT
