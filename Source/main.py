@@ -3,7 +3,8 @@
 
 time = 0
 numVehicles = 0
-
+rides = []
+bonus = 0
 
 class Vehicle:
 
@@ -71,6 +72,7 @@ def getMaxScoreRide(vehicle, rides):
             scores.append( (ride.getScore(vehicle), ride.getFinishTime(vehicle), ride) )
 
     sorted(scores, key=getKey)
+    penis = (numVehicles)
     return scores[:numVehicles]
 
 def selectRide(rideOptions):
@@ -91,6 +93,7 @@ def selectRide(rideOptions):
         vehicleToRide.listOfRides.append(vehicleToRide.ride.id)
 
         rideOptions.delete(currentRideOption)
+        rides.delete(vehicleToRide.ride)
 
         for rideOption in rideOptions:
             rideOptionList = [x for x in rideOption[1] if x[2].id != vehicleToRide.ride.id]
@@ -104,10 +107,10 @@ def main(inpt):
     rows = 0
     columns = 0
     number_rides =0
-    bonus = 0
+
 
     
-    rides = []
+
     vehicles = []
 
     
@@ -141,14 +144,17 @@ def main(inpt):
             id+=1
             
     readData(inpt)
-    
+
+    rideOptions = [[vehicle,getMaxScoreRide(vehicle,rides)] for vehicle in vehicles]
+    selectRide(rideOptions)
+
     for t in range(time):
         for vehicle in vehicles:
-            vehicle.
-        vehicles_not_ride = []
-        for veh in vehicles:
-            if veh.ride == None:
-                vehicles_not_ride.append(veh)
+            vehicle.updatePosition()
+
+        freeVehicles = [vehicle for vehicle in vehicles if vehicle.ride == None]
+        rideOptions = [[vehicle,getMaxScoreRide(vehicle,rides)] for vehicle in freeVehicles]
+        selectRide(rideOptions)
             
                 
     
