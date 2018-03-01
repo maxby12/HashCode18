@@ -5,9 +5,7 @@ class Vehicle:
         self.pos = [0, 0]
         self.id = id
         self.ride = None
-        
-    def __str__(self):
-        return str(self.pos)+" "+str(self.id)+" "+str(self.ride)
+        self.listOfRides = []
 
 class Ride:
 
@@ -27,9 +25,6 @@ class Ride:
         return self.distance
     def getFinishTime(self, vehicle):
         return max(time + distance(vehicle.pos, self.startPos), self.startTime) + self.distance
-    
-    def __str__(self):
-        return str(self.id)+" "+str(self.startPos)+" "+str(self.endPos)+" "+str(self.startTime)+" "+str(self.endTime)+" "+str(self.distance)
 
 
 def distance(pos1, pos2):
@@ -43,20 +38,30 @@ def getMaxScoreRide(vehicle, rides):
     scores = []
     for ride in rides:
         if (ride.isFactible(vehicle)):
-            scores.append( (ride.getScore(vehicle), ride.getFinishTime(vehicle), ride.id) )
+            scores.append( (ride.getScore(vehicle), ride.getFinishTime(vehicle), ride) )
 
     sorted(scores, key=getKey)
     return scores[:numVehicles]
 
 def selectRide(rideOptions):
 
-    maxScore = 0
-    currentRide = 0
-    vehicleToRide = 0
+    while(len(rideOptions) > 0):
 
-    for rideOption in rideOptions:
-        if (rideOption[1][0] > maxScore):
-            currentRide = rideOption[1][2]
-            vehicleToRide = rideOption[0]
-            maxScore = rideOption[1][0]
+        maxScore = 0
+        currentRideOption = None
+        vehicleToRide = None
+
+        for rideOption in rideOptions:
+            if (rideOption[1][0][0] > maxScore or (rideOption[1][0][1]<currentRideOption[1][0][1] and rideOption[1][0][0] == maxScore)):
+                currentRideOption = rideOption
+                vehicleToRide = rideOption[0]
+                maxScore = rideOption[1][0][0]
+
+        vehicleToRide.ride = currentRideOption[1][0][2]
+        vehicleToRide.listOfRides.append(vehicleToRide.ride.id)
+
+        rideOptions.delete(currentRideOption)
+
+        for rideOption in rideOptions:
+            rideOptionList = [x for x in rideOption[1] if x[2].id != vehicleToRide.ride.id]
 
