@@ -5,6 +5,9 @@ class Vehicle:
         self.pos = [0, 0]
         self.id = id
         self.ride = None
+        
+    def __str__(self):
+        return str(self.pos)+" "+str(self.id)+" "+str(self.ride)
 
 class Ride:
 
@@ -24,6 +27,9 @@ class Ride:
         return self.distance
     def getFinishTime(self, vehicle):
         return max(time + distance(vehicle.pos, self.startPos), self.startTime) + self.distance
+    
+    def __str__(self):
+        return str(self.id)+" "+str(self.startPos)+" "+str(self.endPos)+" "+str(self.startTime)+" "+str(self.endTime)+" "+str(self.distance)
 
 
 def distance(pos1, pos2):
