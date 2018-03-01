@@ -5,7 +5,31 @@ class Vehicle:
         self.pos = [0, 0]
         self.id = id
         self.ride = None
+        self.isRiding = False
         self.listOfRides = []
+
+    def updatePosition(self):
+        if (self.isRiding):
+            if (self.pos[0] != self.ride.endPos[0]):
+                if (self.pos[0] > self.ride.endPos[0]): self.pos[0] -= 1
+                else: self.pos[0] += 1
+            elif (self.pos[1] != self.ride.endPos[1]):
+                if (self.pos[1] > self.ride.endPos[1]): self.pos[1] -= 1
+                else: self.pos[1] += 1
+        else:
+            if (self.pos[0] != self.ride.startPos[0]):
+                if (self.pos[0] > self.ride.startPos[0]): self.pos[0] -= 1
+                else: self.pos[0] += 1
+            elif (self.pos[1] != self.ride.startPos[1]):
+                if (self.pos[1] > self.ride.startPos[1]): self.pos[1] -= 1
+                else: self.pos[1] += 1
+
+        if (self.isRiding and self.pos[0] == self.ride.endPos[0] and self.pos[1] == self.ride.endPos[1]):
+            self.ride = None
+            self.isRiding = False
+        if (not self.isRiding and self.pos[0] == self.ride.startPos[0] and self.pos[1] == self.ride.startPos[1]):
+            self.isRiding = True
+
 
 class Ride:
 
