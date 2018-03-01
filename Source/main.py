@@ -5,10 +5,10 @@ def main(inpt):
     print("OPENING FILE "+inpt+"\n")
     rows = 0
     columns = 0
-    number_vehicles = 0
+    numVehicles = 0
     number_rides =0
     bonus = 0
-    steps = 0
+    time = 0
     
     rides = []
     vehicles = []
@@ -23,13 +23,12 @@ def main(inpt):
         lines = lines.split(" ")
         rows = int(lines[0])
         columns = int(lines[1])
-        number_vehicles = int(lines[2])
+        numVehicles = int(lines[2])
         number_rides = int(lines[3])
         bonus = int(lines[4])
-        steps = int(lines[5])
-        for id in range(number_vehicles):
+        time = int(lines[5])
+        for id in range(numVehicles):
             vehicles.append(Vehicle(id))
-        #print(rows,columns,number_vehicles,number_rides,bonus,steps)
     
             
         lines = file.readlines()
@@ -45,11 +44,22 @@ def main(inpt):
             id+=1
             
     readData(inpt)
-    for t in range(steps):
+    
+    for t in range(time):
         vehicles_not_ride = []
         for veh in vehicles:
             if veh.ride == None:
                 vehicles_not_ride.append(veh)
+                
+    
+    #OUTPUT
+    file = open("file.out",'w')
+    for v in vehicles:
+        output = str(len(v.listOfRides))
+        for i in v.listOfRides:
+            output += " "+str(i)
+        file.write(output+"\n")
+    file.close()
         
         
 
